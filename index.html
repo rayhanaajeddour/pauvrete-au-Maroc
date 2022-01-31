@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+	.Nom_Provin-border {
+		fill: none;
+		stroke: rgb(138, 40, 40);
+		stroke-opacity: 1;
+    	stroke-width: 1;
+    	stroke-linecap: round;
+    	stroke-linejoin: round;
+		pointer-events: none;
+	}
+	
+	.axis text {
+		font: 10px sans-serif;
+	}
+
+	.axis line, .axis path {
+		fill: none;
+		stroke: #000;
+		shape-rendering: crispEdges;
+	}
+</style>
+<meta name="theme-color" content="#478ac9">
+<meta property="og:title" content="Home">
+<meta property="og:type" content="website">
+<body data-home-page="Home.html" data-home-page-title="Home" class="u-body"><header class="u-clearfix u-header u-header" id="sec-eca7"><div class="u-clearfix u-sheet u-sheet-1">
+	
+<section id="home" class="parallax-section">
+	<div class="container">
+		 <div class="row">
+
+			  <div class="col-md-offset-5 col-md-7 col-sm-12">
+				   <div class="home-thumb">
+						<h1 class="u-text u-text-palette-1-base u-text-1">Web MAPPING</h1>
+						<h1 class="wow fadeInUp" data-wow-delay="0.4s">la répartition des cas du covid-19 dans la région de FES MEKNES</h1>
+				   </div>
+			  </div>
+
+		 </div>
+	</div>
+</section>
+<html>
+	<body>
+		<input id="slider" type="range" min="7" max="14" value="7" step="1" />
+
+		<span id="range">7</span>
+		<script src="https://d3js.org/d3.v3.min.js"></script>
+		<script src="https://d3js.org/topojson.v1.min.js"></script>
+		<script src="https://raw.github.com/fryn/html5slider/master/html5slider.js"></script>
+		<script src = "https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.13.0/d3-legend.min.js"></script>
+		<script type="text/javascript">
+
+//la fonction qui renvoie la valeur des cas contaminés d'un jour (range pr detereminer le jour et id pour determiner province)
+	
+onload = function() {
+  var $ = function(id) { return document.getElementById(id); };
+  $('slider').oninput = function() { $('range').innerHTML = this.value; };
+  $('slider').oninput();
+};
+
+	</script>
+	janvier
+		<script>
+			
+						
+			//choropleth
+			var width = 1000, height = 500;
+
+			var value;
+			
+			// changer le type de scale (graduated colors)
+			var color = d3.scale.linear().domain([0, 300]).range(["#fcc5c0", "#7a0177"]);
+
+			//Changer la projection
+			var projection = d3.geo.conicConformal().parallels([-90 + 00 / 60, 90 + 00 / 60]).rotate([-05 + 24 / 60, 0 + 0 / 60]).translate([width / 2, height / 2]);
+
+			var path = d3.geo.path().projection(projection);
+
+			var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
+			
+
+			d3.json("ok-test.json", function(error, ok) {
+				var provincesnew = topojson.feature(ok, ok.objects.provincesnew);
+
+				projection.scale(1).translate([0, 0]);
+
+				var b = path.bounds(provincesnew), s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height), t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+
+				projection.scale(s).translate(t);
+
+				svg.selectAll("path").data(provincesnew.features.filter(function(d) {
+					return d.id;
+				})).enter().append("path").attr("class", "Nom_Provin").attr("d", path).style("fill", function(d) {
+					return color(d.properties.s);
+				}).append("title").text(function(d) {
+					return " Province de " + d.properties.Nom_Provin ;
+				});
+
+				svg.append("path").datum(topojson.mesh(ok, ok.objects.provincesnew, function(a, b) {
+					return a !== b;
+				})).attr("class", "Nom_Provin-border").attr("d", path);
+
+				d3.selectAll("input").on("change", function change() {
+					var value = this.value;
+
+					d3.selectAll("path").style("fill", function(d) {
+						switch (value) {
+							case "7":
+							return color(d.properties.s);
+								break;
+							case "8":
+								return color(d.properties.h);
+								break;
+							case "9":
+								return color(d.properties.n);
+								break;
+							case "10":
+								return color(d.properties.d);
+								break;
+							case "11":
+								return color(d.properties.o);
+								break;
+							case "12":
+								return color(d.properties.do);
+								break;
+							case "13":
+								return color(d.properties.t);
+								break;
+							case "14":
+								return color(d.properties.q);
+								break;
+						}
+					});
+				});
+
+			});
+			//end choropleth
+			var svg = d3.select("svg");
+
+
+            // LINEAR
+            var linearV = d3.scale.linear()
+                                .domain([0,300])
+                                .range(["#fcc5c0", "#7a0177"]);
+            svg.append("g")
+                            .attr("class", "legendV")
+                            .attr("transform", "translate(900,200)");
+                        
+            var legendV = d3.legend.color()
+                                                .shapeWidth(40)
+                                                .cells(10)
+                                                .title("Cas contaminés")
+                                                .labelFormat(d3.format('.0f'))
+                                                .scale(linearV);
+                        svg.select(".legendV")
+                            .call(legendV);
+
+		</script>
+		
+
+	</body>
+</html>
