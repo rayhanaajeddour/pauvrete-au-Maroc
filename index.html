@@ -294,12 +294,13 @@ https://templatemo.com/tm-518-sentra
 	                    var geoJson =L.geoJson(pauvrete)
 	            
 	                    function getColor(attribut) {
-	                        return attribut > 50 ? '#08589e' :
-	                               attribut > 40 ? '#2b8cbe' :
-	                               attribut > 30 ? '#7bccc4' :
-	                               attribut > 20 ? '#a8ddb5' :
-	                               attribut > 10 ? '#ccebc5' :
-	                                                    '#f0f9e8';
+	                        return attribut > 50 ? '#084081' :
+	                               attribut > 40 ? '#0868ac' :
+	                               attribut > 30 ? '#2b8cbe' :
+	                               attribut > 20 ? '#7bccc4' :
+				       attribut > 15 ? '#a8ddb5' :
+	                               attribut > 10 ? '#e0f3db' :
+	                                                    '#f7fcf0';
 	                    }
 	                    function stylisermonFeature(feature) {
 	                        return {
